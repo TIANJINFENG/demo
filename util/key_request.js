@@ -5,6 +5,7 @@ var url = require("url");
 var key = require('../key')
 
 var request = function (callback) {
+
     var strUrl = "http://192.168.1.31:8080/tyk/keys/create";
 
     var parse = url.parse(strUrl);
@@ -18,6 +19,7 @@ var request = function (callback) {
         "port"   : parse.port,
         "headers": {
             'Content-Type': 'application/json',
+
             "x-tyk-authorization":"352d20ee67be67f6340b4c0605b044b7"
         }
     }

@@ -1,46 +1,46 @@
-var http_key = require('../util/http_key_request');
-console.log(http_key)
-var http_api = require('../util/http_create_api_request')
-console.log(http_api)
+var http_key = require('../util/key_request');
+
+var http_api = require('../util/create_api_request')
+
 var http_visit_api = require('../util/visit_api')
 
-function Controller_index(view){}
+function Controllerindex(){}
 
-Controller_index.prototype.index= function(req,res){
+Controllerindex.prototype.index= function(req,res){
 
      res.render ('index')
 
 }
-Controller_index.prototype.logout= function(req,res){
+Controllerindex.prototype.logout= function(req,res){
 
     req.logout();
 
     res.redirect('/');
 }
 
-Controller_index.prototype.dataBox= function(req,response){
+Controllerindex.prototype.dataBox= function(req,response){
 
-    http_key( function(data){
+    http_key( function(datas){
 
-    response.json (data)
-
-    })
-}
-
-Controller_index.prototype.create_api= function(req,response){
-
-    http_api( function(data){
-
-        response.json (data)
+        response.json (datas)
 
     })
 }
-Controller_index.prototype.visit_api= function(req,response){
 
-    http_visit_api( function(data){
+Controllerindex.prototype.create_api= function(req,response){
 
-        response.json (data)
+    http_api( function(datas){
+
+        response.json (datas)
 
     })
 }
-module.exports = new Controller_index();
+Controllerindex.prototype.visit_api= function(req,response){
+
+    http_visit_api( function(datas){
+
+        response.json (datas)
+
+    })
+}
+module.exports = new Controllerindex();

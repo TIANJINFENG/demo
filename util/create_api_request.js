@@ -25,8 +25,11 @@ var createapi = function(callback){
 
         }
     };
+    console.log("----------------------")
 
     var req = http.request(options, function(res){
+
+        console.log("aaaaa")
 
         res.setEncoding("utf-8");
 
