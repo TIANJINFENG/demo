@@ -3,9 +3,13 @@ var http = require("http");
 var url = require("url");
 
 var data = require('../data');
-var create_api = function(callback){
+
+var createapi = function(callback){
+
     var strUrl = "http://192.168.1.31:8080/tyk/apis/";
+
     var parse = url.parse(strUrl);
+
     console.log(parse)
 
     var options = {
@@ -16,6 +20,7 @@ var create_api = function(callback){
         "headers": {
 
             'Content-Type': 'application/json',
+
             "x-tyk-authorization":"352d20ee67be67f6340b4c0605b044b7",
 
         }
@@ -26,7 +31,9 @@ var create_api = function(callback){
         res.setEncoding("utf-8");
 
         console.log("@@@@@@@@@@@@######")
+
         var resData = "";
+
         res.on("data", function(chunk){
 
             resData += chunk;
@@ -41,8 +48,10 @@ var create_api = function(callback){
 
         });
     });
+
     req.write(JSON.stringify(data));
+
     req.end();
 }
 
-module.export = create_api
+module.exports = createapi

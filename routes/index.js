@@ -5,12 +5,12 @@ var index_controller = require('./../controller/index_controller');
 
 var users_controller = require('./../controller/users_controller');
 
-
-/*var http = require("http");
-var url = require("url");
+//
+//var http = require("http");
+//var url = require("url");
 
 //var data = require('../data');
-var key = require('../key')
+/*var key = require('../key')
 //var AV = require('./../controller/AV');
 
 var strUrl = "http://192.168.1.31:8080/tyk/keys/create";
@@ -58,9 +58,10 @@ var parse = url.parse(strUrl);
  "method" : "GET",
  "host"   : parse.hostname,
  "path"   : parse.path,
- "port"   :parse.port,
+ "port"   : parse.port,
  "headers": {
-     "Authorization":"53ac07777cbb8c2d53000002706a43a34d004f86753916d7c5aee9db"
+
+     "Authorization":"57ac445e40ab1e0001000004e859e4e2a7e341804669df6dfe26168a"
  }
  };
  var req = http.request(options, function(res){
@@ -70,11 +71,14 @@ var parse = url.parse(strUrl);
  console.log("@@@@@@@@@@@@######")
 
  var resData = "";
+
  res.on("data", function(chunk){
  //console.log(chunk)
  resData += chunk;
+
  }).on("end", function(){
- console.log(JSON.parse(resData));
+
+     console.log(resData);
  });
  });
  //req.write(JSON.stringify(data));
@@ -134,6 +138,8 @@ module.exports = function(app) {
     app.get('/dataBox', bind(index_controller,"dataBox"));
 
     app.get('/create_api', bind(index_controller,"create_api"));
+
+    app.get('/visit_api', bind(index_controller,"visit_api"));
 
 
 }

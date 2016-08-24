@@ -31,7 +31,9 @@ var request = function (callback) {
         console.log("dsfsdfsd")
 
         res.on("data", function(chunk){
+
             console.log("QWEQEQWEQWE")
+
             resData+=chunk;
 
         }).on("end", function(){
