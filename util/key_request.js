@@ -2,11 +2,11 @@ var http = require("http");
 
 var url = require("url");
 
-var key = require('../key')
+
 
 var request = function (callback) {
 
-    var strUrl = "http://192.168.1.31:8080/tyk/keys/create";
+   ;
 
     var parse = url.parse(strUrl);
 
@@ -24,7 +24,7 @@ var request = function (callback) {
         }
     }
 
-    var req=http.request(options, function(res){
+    var req = http.request(options, function(res){
 
         res.setEncoding("utf-8");
 
@@ -39,8 +39,9 @@ var request = function (callback) {
             resData+=chunk;
 
         }).on("end", function(){
+
             var access= JSON.parse(resData);
-            //console.log(access.key)
+
             callback != undefined && callback(access.key);
         });
     });

@@ -1,77 +1,137 @@
 var AV = require('../AV');
 var http_key = require('../util/key_request')
+var data = require('../data')
+var key = require('../key')
 
 function Controllerusers(){}
 
 var App= AV.Object.extend('App');
+//var User= AV.Object.extend('user_information');
 
 Controllerusers.prototype.users = function(req,res){
 
     res.render('users', {title:"index",reqs:req})
 
 }
+Controllerusers.prototype.app = function(req,response){
 
-/*Controller_users.prototype.create_app = function(req,res){
+    // res.render('app', {title:"Relation"})
+response.json("123")
+}
 
+Controllerusers.prototype.relation_app = function(req,res){
+    var query = new AV.Query('_User');
 
+    query.equalTo('username', req.body.user_name);
 
-        var app = new Aqq();
+    query.find().then(function (results) {
+        console.log(results)
 
-        app.set('name',req.body.app_name);
+        var user = AV.Object.createWithoutData('_User',results[0].id);
 
-        app.set('userid',req.body.user_id)
+        var app = AV.Object.createWithoutData('App', '57bf9ff1c4c971006174e131');
 
-        app.save().then(function (todo) {
+        var relation = app.relation('containedUser');
 
-        }, function (error) {
+        console.log(user)
 
-            console.log(error);
-        });
-        console.log(data)
+        relation.add(user);
 
+        app.save()
 
-    res.redirect("/users")
-}*/
-Controllerusers.prototype.create_app = function(req,res){
-
-    var app = new App();
-
-    var administratorRole = new AV.Role("Administrator");//新建角色
-
-    var relation= administratorRole.getUsers();
-
-    administratorRole.getUsers().add(AV.User.current());//为当前用户赋予该角色
-
-    administratorRole.save().then(function(administratorRole) {//角色保存成功
-
-        var acl = new AV.ACL();
-
-        acl.setPublicReadAccess(true);
-
-        acl.setRoleWriteAccess(administratorRole,true);
-
-        // 将 ACL 实例赋予 Post 对象
-        app.setACL(acl);
-
-        app.save(null, {
-            success: function(app) {
-            },
-            error: function(app, error) {
-                console.log(error);
-            }
-        });
-    }, function(error) {
-        //角色保存失败，处理 error
-    });
-
-    app.save().then(function (todo) {
-
+        res.redirect("/app")
     }, function (error) {
 
-        console.log(error);
+        res.redirect("/app")
+
     });
 
-    res.redirect("/users")
+}
+Controllerusers.prototype.query = function(req,res){
+
+    res.render('app', {title:"Query"})
+
+}
+
+Controllerusers.prototype.query_app = function(req,res){
+
+    var targetTag = AV.Object.createWithoutData('_User', '57bd65f38ac2470063196c01');
+
+    var query = new AV.Query('App');
+
+    query.equalTo('containedUser', targetTag);
+
+    query.find().then(function (results) {
+
+        console.log(results)
+    }, function (error) {
+    });
+
+    res.redirect("/app")
+}
+
+Controllerusers.prototype.create_app = function(req,res){
+
+    var userid = AV.User.current();
+
+    var user = AV.Object.createWithoutData('_User', userid.id);
+
+    var relation = user.relation('containedApps');
+
+    var query = relation.query();
+
+    query.find().then(function (results) {
+
+        if(results.length < 6 ) {
+
+            var app = new App();
+
+            var roleQuery = new AV.Query(AV.Role);
+
+            roleQuery.equalTo('name', 'Administrator');
+
+            roleQuery.first().then(function (adminRole) {
+
+                var userRelation = adminRole.relation('users');
+
+                userRelation.query().find().then(function (userList) {
+
+                    app.set('app_name',req.body.app_name);
+
+                    var acl = new AV.ACL();
+
+                    acl.setPublicReadAccess(true);
+
+                    acl.setWriteAccess(AV.User.current(),true);
+
+                    acl.setWriteAccess(userList[0],true);
+
+                    app.setACL(acl);
+
+                    var user = AV.User.current()
+
+                    var apps = [app]
+                    AV.Object.saveAll(apps).then(function (cloudApps) {
+
+                        var relation = user.relation('containedApps');
+
+                        relation.add(cloudApps[0]);
+
+                        user.save();// 保存到云端
+
+                    }, function (error) {
+
+                    });
+
+                }, function (error) {
+                });
+            }, function (error) {
+            });
+        }
+        else {res.redirect("/app")}
+    }, function (error) {
+    });
+
 }
 Controllerusers.prototype.isLoggedIn = function(req, res, next) {
 

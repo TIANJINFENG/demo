@@ -2,17 +2,14 @@ var http = require("http");
 
 var url = require("url");
 
-var data = require('../data');
-
-var createapi = function(callback){
-
-    var strUrl = "http://192.168.1.31:8080/tyk/apis/";
+var createapi = function(data,strUrl,callback){
 
     var parse = url.parse(strUrl);
 
     console.log(parse)
 
     var options = {
+
         "method" : "POST",
         "host"   : parse.hostname,
         "path"   : parse.path,

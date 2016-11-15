@@ -1,0 +1,54 @@
+
+var passport = require('passport');
+
+var LocalStrategy = require('passport-local').Strategy;
+
+var user_data = require('../models/user_data');
+console.log(user_data)
+passport.use( new LocalStrategy(
+    function (username, password, done) {
+        console.log('+++++++++++++++++++++++++++++++++++=')
+        user_data.get(null, function (err, user) {
+            console.log(user)
+            console.log('---------------123-------------------');
+            if (err) { return done(err); }
+            console.log('---------------456-------------------');
+            if (!user) {
+                console.log('------------789----------------------');
+                return done(null, false, { message: '用户名不存在.' });
+            }
+            if (!user.validPassword(password)) {
+                console.log('-------------tyuio---------------------');
+                return done(null, false, { message: '密码不匹配.' });
+            }
+            console.log('------------------ghjjk----------------');
+            return done(null, user);
+         });
+
+        // AV.User.logIn(username, password).then(function (user) {
+        //     console.log('-------------------------------------------')
+        //     return done(null, user);
+        //
+        // }, function (error){
+        //
+        //     console.log('*******************')
+        //
+        //     return done(null, false, { message: 'Incorrect .' })
+        //     // 可以配置通过数据库方式读取登陆账号
+        // });
+    }
+));
+
+passport.serializeUser(function (user, done) {//保存user对象
+
+    done(null, user);//可以通过数据库方式操作
+});
+
+passport.deserializeUser(function (user, done) {//删除user对象
+
+    done(null, user);//可以通过数据库方式操作
+});
+
+
+
+module.exports = passport

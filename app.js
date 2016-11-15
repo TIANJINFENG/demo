@@ -9,6 +9,21 @@ var session = require('express-session');
 var flash = require('express-flash');
 var passport = require('passport');
 
+
+
+
+var AV = require('leanengine');
+
+var APP_ID = '4KzraCcshsibb7z1Dl7AwMph-gzGzoHsz';
+var APP_KEY = 'jFDr696BkEnrdGW4Hk3CSArv';
+
+AV.init({
+  appId: APP_ID,
+  appKey: APP_KEY
+});
+var leanengine = require('leanengine')
+
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -18,6 +33,13 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+  next();
+});
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -29,19 +51,24 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash())
 
-app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
-  next();
+app.use(AV.express())
+
+/*app.use('/__engine/1/ping', function(req, res) {
+  res.end(JSON.stringify({
+    "runtime": "nodejs-" + process.version,
+    "version": "custom"
+  }));
+});*/
+
+// 云函数列表
+app.get('/1.1/_ops/functions/metadatas', function(req, res) {
+  res.end(JSON.stringify([]));
 });
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-/*app.use('/', routes);
-app.use('/users', users);
-app.use('/users', routes);
-app.use('/dataBox', routes);*/
+
 routes(app);
 
 // catch 404 and forward to error handler
