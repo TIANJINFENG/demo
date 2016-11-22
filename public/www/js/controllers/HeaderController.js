@@ -2,6 +2,11 @@ MetronicApp.controller('HeaderController', ['$scope', '$http', function ($scope,
     $scope.$on('$includeContentLoaded', function () {
         Layout.initHeader();
     });
+
+    $scope.allBaseStation = ['北京','上海'];
+    $scope.allSignalType = ['BDS','GPS','GLS'];
+
+
     if (localStorage.getItem('base_station') && localStorage.getItem('signal_type')) {
         $scope.base_station = localStorage.getItem('base_station');
         $scope.signal_type = localStorage.getItem('signal_type');

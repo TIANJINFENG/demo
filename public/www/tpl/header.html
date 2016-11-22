@@ -10,14 +10,7 @@
                     <i class="fa fa-angle-down"></i>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="javascript:;" ng-click="changeBaseStation('北京')">
-                            <i class="icon-flag"></i> 北京 </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" ng-click="changeBaseStation('上海')">
-                            <i class="icon-flag"></i> 上海 </a>
-                    </li>
+                    <base-Station-List></base-Station-List>
                 </ul>
             </div>
             <div class="btn-group">
@@ -26,18 +19,7 @@
                     <i class="fa fa-angle-down"></i>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="javascript:;" ng-click="changeSignalType('BDS')">
-                            <i class="icon-docs"></i> BDS </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" ng-click="changeSignalType('GPS')">
-                            <i class="icon-tag"></i> GPS </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" ng-click="changeSignalType('GLO')">
-                            <i class="icon-share"></i> GLO </a>
-                    </li>
+                    <signal-Type-List></signal-Type-List>
                 </ul>
             </div>
         </div>

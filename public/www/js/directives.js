@@ -39,7 +39,27 @@ MetronicApp.directive('ngSpinnerBar', ['$rootScope', '$state',
             }
         };
     }
-])
+]).directive('baseStationList',function() {
+    return {
+        restrict: 'EA',
+        controller: 'HeaderController',
+        template:
+        "<li ng-repeat='baseStation in allBaseStation'>"+
+            "<a href='javascript:;' ng-click='changeBaseStation(baseStation)'>"+
+                "<i class='icon-flag'></i> {{baseStation}} </a>"+
+        "</li>"
+    }
+}).directive('signalTypeList',function() {
+    return {
+        restrict: 'EA',
+        controller: 'HeaderController',
+        template:
+        "<li ng-repeat='signalType in allSignalType'>"+
+        "<a href='javascript:;' ng-click='changeSignalType(signalType)'>"+
+        "<i class='icon-flag'></i> {{signalType}} </a>"+
+        "</li>"
+    }
+})
 
 
 

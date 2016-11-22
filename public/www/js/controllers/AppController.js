@@ -13,6 +13,8 @@ MetronicApp.controller('AppController', ['$scope', '$http', '$rootScope', '$cook
         }).success(function (data) {
             if (data["connect.sid"]) {
                 $cookieStore.put("connect.sid", data["connect.sid"])
+                localStorage.setItem('baseStation','基站')
+                localStorage.setItem('signalType','信号类型')
                 checkLogin()
             }
         }).error(function (req) {

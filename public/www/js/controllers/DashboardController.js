@@ -1,46 +1,51 @@
 angular.module('MetronicApp').controller('dashboardController', function ($interval, $rootScope, $scope) {
 
-    var data = {
-        "北京": {
-            'GPS': [24, 23, 43, 23, 23, 23, 23, 23, 64, 57, 23, 23],
-            'BDS': [29, 23, 63, 23, 23, 63, 23, 23, 64, 57, 43, 23],
-            'GLO': [24, 23, 43, 23, 23, 23, 53, 23, 64, 57, 23, 23]
-        },
-        "上海": {
-            'GPS': [24, 23, 43, 23, 23, 43, 43, 23, 64, 57, 23, 23],
-            'BDS': [24, 23, 43, 23, 23, 53, 23, 23, 64, 57, 23, 23],
-            'GLO': [24, 23, 43, 33, 23, 23, 23, 23, 64, 57, 23, 33]
-        }
-    };
-
     var timeArray = []   //时间
-    var bdsatnumArray = []   //北斗
-    var gpsatnumArray = []   //GPS
-    var glsatnumArray = []   //GLONASS
+    var data_array = {
+        "BDS": [],
+        "GLS": [],
+        "GPS": [],
+        "hor": [],
+        "ver": [],
+        "hacc": [],
+        "vacc": [],
+        "hdop": [],
+        "vdop": [],
+        "pdop": [],
+        "hpl": [],
+        "vpl": [],
+        "alt": [],
+        "lat": [],
+        "lon": [],
+        "rura": [],
+        "type": [],
+        "udre": [],
+        "utc": [],
+    }
 
     function gTestData() {
         return {
             "abserror": {  //绝对误差
-                "hor": "4.8",  //水平
-                "ver": "5.5"   //垂直
+                "hor": Math.floor(Math.random() * 40),  //水平
+                "ver": Math.floor(Math.random() * 40)   //垂直
             },
             "accinfo": {   //定位精度
-                "hacc": 1.04,  //水平
-                "vacc": 1.29   //垂直
+                "hacc": Math.floor(Math.random() * 40),  //水平
+                "vacc": Math.floor(Math.random() * 40)   //垂直
             },
-            "alarmthreshold": {   //告警阈值-------修改过
+            "alarmthreshold": {   //告警阈值-------修改过  //todo begain 添加数组
                 "horacc": 10,   //水平定位精度
                 "hpl": 8,      //水平误差告警门限
                 "ion": 10,      //电离层发散异常
                 "pdop": 10,     //PDOP阈值
                 "pr": 10,       //伪距残差异常
                 "veracc": 9,   //垂直定位精度
-                "vpl": 7       //垂直误差告警门限
+                "vpl": 7       //垂直误差告警门限    //todo end 添加数组
             },
             "dopinfo": {    //DOP值--------修改过
-                "hdop": 1.04,   //hdop
-                "vdop": 1.29,   //vdop
-                "pdop": 2.12    //pdop
+                "hdop": Math.floor(Math.random() * 40),   //hdop
+                "vdop": Math.floor(Math.random() * 40),   //vdop
+                "pdop": Math.floor(Math.random() * 40)    //pdop
             },
             "obsinfo": [
                 {    //观测量数据，每次数量可能不同------修改过
@@ -134,8 +139,8 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
                     "Ele": 9
                 }],
             "plinfo": {  //保护水平
-                "hpl": "0.5",  //水平
-                "vpl": "0.6"   //垂直
+                "hpl": Math.floor(Math.random() * 40),  //水平
+                "vpl": Math.floor(Math.random() * 40)   //垂直
             },
             "posinfo": {   //定位信息
                 "alt": 143.123,                  //高程
@@ -147,9 +152,9 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
                 "utc": "2016-10-10 08:12:34"     //UTC时间
             },
             "satnum": {  //卫星数
-                "bdsatnum": Math.floor(Math.random() * 40),  //北斗
-                "glsatnum": Math.floor(Math.random() * 40),  //GPS
-                "gpsatnum": Math.floor(Math.random() * 40)//GLONASS
+                "BDS": Math.floor(Math.random() * 40),  //北斗
+                "GLS": Math.floor(Math.random() * 40),  //GPS
+                "GPS": Math.floor(Math.random() * 40)//GLONASS
             },
             "satpos": {  //卫星位置，三个系统，数量可能各有不同
                 "bdsatpos": [  //北斗
@@ -298,23 +303,12 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
 
 
     $scope.$on('to-child', function (event, type) {
-        //update_chart_data();
+
     });
     var socket = io.connect('http://192.168.1.30:3000');
     socket.on('new', function (data) {
-       // DopChart.initCharts(data);
-        //console.log(data)
+       console.log(data)
     });
-
-    function update_chart_data() {
-        if (localStorage.getItem('base_station') && localStorage.getItem('signal_type')) {
-            var bs = localStorage.getItem('base_station');
-            var st = localStorage.getItem('signal_type');
-            if (bs != '基站' && st != '信号类型') {
-                DopChart.initCharts(data[bs][st]);
-            }
-        }
-    }
 
     function showTime() {
         var date = new Date();
@@ -325,186 +319,69 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
         return now + date.getMinutes();
     }
 
-    $scope.nowTime = showTime()
+    function showSatelliteNum(data) {
+        $scope.satelliteData = {
+            "compassSatellite": data.satpos.bdsatpos.length,
+            "gpsSatellite": data.satpos.gpsatpos.length,
+            "glsSatellite": data.satpos.glsatpos.length
+        }
+    }
 
-    function showChartTooltip(x, y, xValue, yValue) {
-        $('<div id="tooltip" class="chart-tooltip">' + yValue + '<\/div>').css({
-            position: 'absolute',
-            display: 'none',
-            top: y - 40,
-            left: x - 40,
-            border: '0px solid #ccc',
-            padding: '2px 6px',
-            'background-color': '#fff'
-        }).appendTo("body").fadeIn(200);
+    function starMapData() {
+        var arr =[]
+        var data = gTestData();
+        showSatelliteNum(data);
+        for(var i = 0;;i++) {
+            var  arr2 = []
+            if(data.satpos.bdsatpos[i]){
+                arr2[0]=(data.satpos.bdsatpos[i].az)
+                arr2[1]=(data.satpos.bdsatpos[i].el)
+            }
+            if(data.satpos.gpsatpos[i]){
+                arr2[2]=(data.satpos.gpsatpos[i].az)
+                arr2[3]=(data.satpos.gpsatpos[i].el)
+            }
+            if(data.satpos.glsatpos[i]){
+                arr2[4]=(data.satpos.glsatpos[i].az)
+                arr2[5]=(data.satpos.glsatpos[i].el)
+            }
+            arr.push(arr2);
+            if(!data.satpos.bdsatpos[i] && !data.satpos.gpsatpos[i] && !data.satpos.glsatpos[i]) {
+                break;
+            }
+        }
+        return arr;
+
     }
 
     function starMap(data) {
         anychart.onDocumentReady(function () {
             var dataSet = anychart.data.set(data);
-            var seriesData = dataSet.mapAs({x: [0], value: [1]});
-            var chart = anychart.polar();
+            var bdsStarData = dataSet.mapAs({x: [0], value: [1]});
+            var gpsStarData = dataSet.mapAs({x: [2], value: [3]});
+            var glsStarData = dataSet.mapAs({x: [4], value: [5]});
+            chart = anychart.polar();
             chart.container('starMap');
-            chart.yScale().minimum(0).maximum(16);
-            chart.xScale().minimum(0).maximum(360);
-            chart.xScale().ticks().interval(60);
-            chart.xAxis().labels().textFormatter(function () {
+            chart.yScale().minimum(0).maximum(90);
+            chart.yScale().ticks().interval(10);
+            chart.xScale().maximum(360);
+            chart.xScale().ticks().interval(30);
+            chart.xAxis().labels().textFormatter(function() {
                 return this['value'] + '°'
             });
-            chart.marker(seriesData);
+            chart.title(false);
+            chart.legend()
+                .align('center')
+                .enabled(true);
+            var series1 = chart.marker(bdsStarData);
+            series1.name('北斗');
+            var series2 = chart.marker(gpsStarData);
+            series2.name('GPS');
+            var series3 = chart.marker(glsStarData);
+            series3.name('GLS');
             chart.draw();
         });
     }
-
-    // 11-9 ---------------update lineChart------------
-
-    function lineChart(chartId, data, color) {
-        if (!jQuery.plot) return;
-        if ($('#' + chartId).size() != 0) {
-            var previousPoint2 = null;
-            $('#' + chartId + '_loading').hide();
-            $('#' + chartId + '_content').show();
-            $.plot($("#" + chartId),
-                [{
-                    data: data,
-                    lines: {
-                        fill: 0.2,
-                        lineWidth: 0,
-                    },
-                    color: [color]
-                }, {
-                    data: data,
-                    points: {
-                        show: true,
-                        radius: 4,
-                        fillColor: color,
-                        lineWidth: 2
-                    },
-                    color: color,
-                    shadowSize: 1
-                }, {
-                    data: data,
-                    lines: {
-                        show: true,
-                        fill: false,
-                        lineWidth: 3
-                    },
-                    color: color,
-                    shadowSize: 0
-                }],
-
-                {
-
-                    xaxis: {
-                        tickLength: 0,
-                        tickDecimals: 0,
-                        mode: "categories",
-                        min: 0,
-                        font: {
-                            lineHeight: 18,
-                            style: "normal",
-                            variant: "small-caps",
-                            color: "#6F7B8A"
-                        }
-                    },
-                    yaxis: {
-                        ticks: 5,
-                        tickDecimals: 0,
-                        tickColor: "#eee",
-                        font: {
-                            lineHeight: 14,
-                            style: "normal",
-                            variant: "small-caps",
-                            color: "#6F7B8A"
-                        }
-                    },
-                    grid: {
-                        hoverable: true,
-                        clickable: true,
-                        tickColor: "#eee",
-                        borderColor: "#eee",
-                        borderWidth: 1
-                    }
-                });
-
-            appendChart(chartId)
-        }
-    }
-
-
-    function appendChart(chartId) {
-
-        $("#" + chartId).bind("plothover", function (event, pos, item) {
-            $("#x").text(pos.x.toFixed(2));
-            $("#y").text(pos.y.toFixed(2));
-            if (item) {
-                if (previousPoint2 != item.dataIndex) {
-                    previousPoint2 = item.dataIndex;
-                    $("#tooltip").remove();
-                    var x = item.datapoint[0].toFixed(2),
-                        y = item.datapoint[1].toFixed(2);
-                    showChartTooltip(item.pageX, item.pageY, item.datapoint[0], item.datapoint[1]);
-                }
-            }
-        });
-        $('#' + chartId).bind("mouseleave", function () {
-            $("#tooltip").remove();
-        });
-    }
-
-    var DopChart = function () {
-        return {
-            initCharts: function (Data) {
-                $scope.satelliteData = {
-                    compassSatellite: 29,
-                    gpsSatellite: 23,
-                    glsSatellite: 12
-                };
-                var visitors = [
-                    ['02/2013', Data[0]],
-                    ['03/2013', Data[9]],
-                    ['04/2013', Data[6]],
-                    ['05/2013', Data[5]],
-                    ['06/2013', Data[4]],
-                    ['07/2013', Data[3]],
-                    ['08/2013', Data[2]],
-                    ['09/2013', Data[7]],
-                    ['10/2013', Data[1]]
-                ];
-                lineChart("site_activities", visitors, "#9ACAE6");
-                lineChart("site_statistics", visitors, "#d85d84");
-                lineChart("chartPositionPrecision", visitors, "#f4ee42");
-                lineChart("absoluteError", visitors, "#68f442");
-                lineChart("protectionLevel", visitors, "#68f442");
-                lineChart("utcContinuity", visitors, "#8342f4");
-                lineChart("chartPositionPrecision", visitors, "#f44292");
-
-            }
-        };
-
-    }();
-
-    //update_chart_data();
-
-
-    function reverseString(str) {
-        return str.split("").reverse().join("");
-    }
-
-
-    var startData = [
-        [180, 6],
-        [195, 3],
-        [210, 6],
-        [225, 6],
-        [240, 6],
-        [255, 5],
-        [270, 4],
-        [285, 10],
-        [300, 4],
-        [315, 8]
-    ];
-
 
     function getDataArray(array, newData) {
         if (array.length > 5) {
@@ -516,14 +393,22 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
         return array
     }
 
-    function getSatelliteNumber(data) {
-        var satnumSeries = []
-        console.log(data.satnum[1])
-        timeArray = getDataArray(timeArray, showTime())
-        satnumSeries.push(getChartSeries('BDS', 'line', getDataArray(bdsatnumArray, data.satnum.bdsatnum)))
-        satnumSeries.push(getChartSeries('GPS', 'line', getDataArray(gpsatnumArray, data.satnum.gpsatnum)))
-        satnumSeries.push(getChartSeries('GLONASS', 'line', getDataArray(glsatnumArray, data.satnum.glsatnum)))
-        return getChartData(timeArray, satnumSeries)
+    function getSatelliteNumber(timeArray,data,key,dataArray) {
+        return getChartData(timeArray, type_line(data,key,dataArray));
+    }
+
+
+    function type_line(data,key,dataArray) {
+        var satDataArray = [];
+        var lineName = []
+        var chartValue = {}
+        for (var i in data[key] ) {
+            satDataArray.push(getChartSeries(i, 'line', getDataArray(dataArray[i], data[key][i])));
+            lineName.push(i);
+        }
+        chartValue.satDataArray = satDataArray;
+        chartValue.lineName = lineName;
+        return chartValue;
     }
 
     function getChartSeries(name, type, array) {
@@ -535,14 +420,15 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
     }
 
 
-    function getChartData(xAxis, yAxis, yName) {
+    function getChartData(xAxis, yAxis) {
         return {
+            legendData:yAxis.lineName,
             xAxis: [{
                 name: '时间',
                 boundaryGap: true,
                 data: xAxis
             }],
-            series: yAxis
+            series: yAxis.satDataArray
         }
     }
 
@@ -569,24 +455,33 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
 
 
     function showChart() {
-        lineChart(getSatelliteNumber(gTestData()), 'satelliteNumber', '颗')
+        timeArray = getDataArray(timeArray, showTime())
+        lineChart(getSatelliteNumber(timeArray,gTestData(),'satnum',data_array), 'satelliteNumber', '颗')
+        lineChart(getSatelliteNumber(timeArray,gTestData(),'dopinfo',data_array), 'DopValue', 'DOP值')
+        lineChart(getSatelliteNumber(timeArray,gTestData(),'abserror',data_array), 'absoluteError', '值')
+        lineChart(getSatelliteNumber(timeArray,gTestData(),'accinfo',data_array), 'chartPositionPrecision', '值')
+        lineChart(getSatelliteNumber(timeArray,gTestData(),'plinfo',data_array), 'protectionLevel', '值')
     }
 
-    lineChart(getSatelliteNumber(gTestData()), 'satelliteNumber', '颗')
+    function init() {
+        showChart();
+        starMap(starMapData());
+        $scope.nowTime = showTime()
+        $interval(showChart, 5000)
+        $interval(showTime, 1000)
+    }
+    init();
 
-    $interval(showChart, 5000)
-
-    $interval(showTime, 1000)
-
-
-    function lineChart(chartData, chartID, yName) {
+    function lineChart(chartData, chartId, yName) {
+        $('#' + chartId + '_loading').hide();
+        $('#' + chartId + '_content').show();
         require.config({
             paths: {
                 echarts: 'assets/global/plugins/echarts/'
             }
         });
         require(['echarts', 'echarts/chart/bar', 'echarts/chart/line'], function (ec) {
-                var myChart = ec.init(document.getElementById(chartID));
+                var myChart = ec.init(document.getElementById(chartId));
                 myChart.setOption({
                     tooltip: {
                         trigger: 'axis'
@@ -597,7 +492,7 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
                         end: 100
                     },
                     legend: {
-                        data: ['BDS', 'GPS', 'GLONASS']
+                        data: chartData.legendData
                     },
                     xAxis: chartData.xAxis,
                     yAxis: [{
