@@ -1,0 +1,194 @@
+<h1 class="page-title"> 北斗卫星 数据面板 </h1>
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a class="dashboard-stat dashboard-stat-v2 blue" href="#">
+            <div class="visual">
+                <i class="fa fa-comments"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-counter="counterup" data-value="29" data-ng-bind="satelliteData.compassSatellite"></span>
+                </div>
+                <div class="desc"> 北斗卫星</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a class="dashboard-stat dashboard-stat-v2 red" href="#">
+            <div class="visual">
+                <i class="fa fa-bar-chart-o"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-counter="counterup" data-value="23" data-ng-bind="satelliteData.gpsSatellite"></span>
+                </div>
+                <div class="desc"> GPS卫星</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a class="dashboard-stat dashboard-stat-v2 green" href="#">
+            <div class="visual">
+                <i class="fa fa-shopping-cart"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-counter="counterup" data-value="12" data-ng-bind="satelliteData.glsSatellite"></span>
+                </div>
+                <div class="desc"> GLS卫星</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a class="dashboard-stat dashboard-stat-v2 purple" href="#">
+            <div class="visual">
+                <i class="fa fa-globe"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-counter="counterup" data-value="89" data-ng-bind="nowTime"></span>
+                </div>
+                <div class="desc"> 当前时间</div>
+            </div>
+        </a>
+    </div>
+</div>
+<!-- BEGIN CHART PORTLETS-->
+<div class="row">
+    <div class="col-md-12">
+
+
+        <div class="row">
+            <div class="col-lg-6 col-xs-12 col-sm-12">
+                <!-- BEGIN PORTLET-->
+                <div class="portlet light ">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-bar-chart font-dark hide"></i>
+                            <span class="caption-subject font-dark bold uppercase">卫星数量</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="portlet-body">
+                            <div id="satelliteNumber" class="chart" "></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END PORTLET-->
+            </div>
+            <div class="col-lg-6 col-xs-12 col-sm-12">
+                <!-- BEGIN PORTLET-->
+                <div class="portlet light ">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-share font-red-sunglo hide"></i>
+                            <span class="caption-subject font-dark bold uppercase">DOP值</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="portlet-body">
+                            <div id="DopValue" class="chart" ></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END PORTLET-->
+            </div>
+        </div>
+        <!-- BEGIN BASIC CHART PORTLET-->
+        <div class="row">
+            <div class="col-lg-6 col-xs-12 col-sm-12">
+                <!-- BEGIN PORTLET-->
+                <div class="portlet light ">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-bar-chart font-dark hide"></i>
+                            <span class="caption-subject font-dark bold uppercase">绝对误差</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="absoluteError_loading">
+                            <img src="assets/global/img/loading.gif" alt="loading"></div>
+                        <div id="absoluteError_content" class="display-none">
+                            <div id="absoluteError" class="chart"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END PORTLET-->
+            </div>
+            <div class="col-lg-6 col-xs-12 col-sm-12">
+                <!-- BEGIN PORTLET-->
+                <div class="portlet light ">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-share font-red-sunglo hide"></i>
+                            <span class="caption-subject font-dark bold uppercase">定位精度</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="chartPositionPrecision_loading">
+                            <img src="assets/global/img/loading.gif" alt="loading"/></div>
+                        <div id="chartPositionPrecision_content" class="display-none">
+                            <div id="chartPositionPrecision" class="chart"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END PORTLET-->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="portlet light portlet-fit ">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject font-dark sbold uppercase">保护水平</span>
+                        </div>
+                    </div>
+                    <div id="protectionLevel_loading">
+                        <img src="assets/global/img/loading.gif" alt="loading"/></div>
+                    <div id="protectionLevel_content" class="display-none">
+                        <div id="protectionLevel" class="chart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="portlet light portlet-fit ">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject font-dark sbold uppercase">UTC连续性</span>
+                        </div>
+                    </div>
+                    <div id="utcContinuity_loading">
+                        <img src="assets/global/img/loading.gif" alt="loading"/></div>
+                    <div id="utcContinuity_content" class="display-none">
+                        <div id="utcContinuity" class="chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <!-- BEGIN CHART PORTLET-->
+                <div class="portlet light ">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject font-dark sbold uppercase">星空图</span>
+                        </div>
+                    </div>
+                    <div id="starMap_loading">
+                        <div id="starMap" class="chart"></div>
+                    </div>
+                </div>
+                <!-- END CHART PORTLET-->
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+<!-- END CHART PORTLETS-->
+<!-- BEGIN PIE CHART PORTLET-->
+
