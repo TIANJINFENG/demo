@@ -6,8 +6,8 @@ var mongodb = require('../models/db');
 
 function user(data, callback) {
     var users = {
-        username: "1",
-        password: "1"
+        username: "3",
+        password: "3"
     };
     mongodb.close()
     mongodb.open(function (err, db) {
@@ -32,6 +32,12 @@ function user(data, callback) {
     });
 };
 
+user(null, function(err,data){
+if(err){
+data = []
+}
+console.log(data)
+})
 function query_user_data(username, password, done) {
     mongodb.close();
     mongodb.open(function (err, db) {

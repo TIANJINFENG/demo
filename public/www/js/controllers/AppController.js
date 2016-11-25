@@ -4,11 +4,11 @@ MetronicApp.controller('AppController', ['$scope', '$http', '$rootScope', '$cook
     });
 
     $scope.$on('logout-to-parent', function (event, data) {
-        checkLogin();
+        
     });
 
     $scope.loginGnss = function () {
-        $http.post("http://139.129.219.125:3000/login?username=" + $scope.userName + "&password=" + $scope.passWord, {}, {
+        $http.post("http://192.168.1.30:3000/login?username=" + $scope.userName + "&password=" + $scope.passWord, {}, {
             withCredentials: true,
         }).success(function (data) {
             if (data["connect.sid"]) {
@@ -35,7 +35,8 @@ MetronicApp.controller('AppController', ['$scope', '$http', '$rootScope', '$cook
     }
 
     function checkLogin() {
-        $http.get("http://139.129.219.125:3000/users", {withCredentials: true}).success(function (req) {
+        $http.get("http://192.168.1.30:3000/users", {withCredentials: true}).success(function (req) {
+
             if (req == true) {
                 isShowLogin(false, true)
             } else {
@@ -45,6 +46,6 @@ MetronicApp.controller('AppController', ['$scope', '$http', '$rootScope', '$cook
             isShowLogin(true, false)
         })
     }
-    isShowLogin(false, true)
+    // isShowLogin(false, true)
     checkLogin()
 }]);

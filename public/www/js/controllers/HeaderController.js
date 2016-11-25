@@ -24,7 +24,7 @@ MetronicApp.controller('HeaderController', ['$scope', '$http', function ($scope,
     }
 
     $scope.logoutGnss = function () {
-        $http.get("http://139.129.219.125:3000/logout", {withCredentials: true}).success(function (req) {
+        $http.get("http://192.168.1.30:3000/logout", {withCredentials: true}).success(function (req) {
             $scope.$emit('logout-to-parent', 'data');
         }).error(function (req) {
             isShowLogin(true, false)

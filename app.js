@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({secret: 'blog.fens.me',
-  resave: true, saveUninitialized: false,
+  //resave: true, saveUninitialized: false,
   cookie: { maxAge: 60000 }}));
 app.use(passport.initialize());
 app.use(passport.session());
