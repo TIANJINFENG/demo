@@ -1,6 +1,3 @@
-/**
- * Created by dell on 16-11-22.
- */
 function gTestData() {
     return {
         "abserror": {  //绝对误差
