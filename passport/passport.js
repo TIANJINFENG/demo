@@ -32,6 +32,12 @@ function user(data, callback) {
     });
 };
 
+user(null, function(err,data){
+if(err){
+data = []
+}
+console.log(data)
+})
 function query_user_data(username, password, done) {
     mongodb.close();
     mongodb.open(function (err, db) {

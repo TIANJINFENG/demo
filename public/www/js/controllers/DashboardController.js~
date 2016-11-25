@@ -305,7 +305,7 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
     $scope.$on('to-child', function (event, type) {
 
     });
-    var socket = io.connect('http://139.129.219.125:3000');
+    var socket = io.connect('http://192.168.1.30:3000');
     socket.on('new', function (data) {
        console.log(data)
     });

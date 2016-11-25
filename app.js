@@ -12,6 +12,7 @@ var passport = require('passport');
 var leanengine = require('leanengine')
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var gTestData = require("./gTestData.js")
 
 var app = express();
 var server = require('http').Server(app);
@@ -59,12 +60,7 @@ io.on('connection', function (socket) {
   setInterval(function () {
     //socket.on('cityName', function(city){
     // if(city == city){
-    var data = JSON.stringify(Math.round(100 * Math.random()));
-    var time = new Date();
-    a.push(data)
-    if (a.length == 12) {
-      io.emit('new', a);
-      a = [];
+      io.emit('new', gTestData);
     }
     // }
     //});

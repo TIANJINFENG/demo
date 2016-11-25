@@ -1,54 +1,107 @@
-
 var passport = require('passport');
 
 var LocalStrategy = require('passport-local').Strategy;
 
-var user_data = require('../models/user_data');
-console.log(user_data)
-passport.use( new LocalStrategy(
-    function (username, password, done) {
-        console.log('+++++++++++++++++++++++++++++++++++=')
-        user_data.get(null, function (err, user) {
-            console.log(user)
-            console.log('---------------123-------------------');
-            if (err) { return done(err); }
-            console.log('---------------456-------------------');
-            if (!user) {
-                console.log('------------789----------------------');
-                return done(null, false, { message: '用户名不存在.' });
-            }
-            if (!user.validPassword(password)) {
-                console.log('-------------tyuio---------------------');
-                return done(null, false, { message: '密码不匹配.' });
-            }
-            console.log('------------------ghjjk----------------');
-            return done(null, user);
-         });
+var mongodb = require('../models/db');
 
-        // AV.User.logIn(username, password).then(function (user) {
-        //     console.log('-------------------------------------------')
-        //     return done(null, user);
-        //
-        // }, function (error){
-        //
-        //     console.log('*******************')
-        //
-        //     return done(null, false, { message: 'Incorrect .' })
-        //     // 可以配置通过数据库方式读取登陆账号
-        // });
+function user(data, callback) {
+    var users = {
+        username: "1",
+        password: "1"
+    };
+    mongodb.close()
+    mongodb.open(function (err, db) {
+        if (err) {
+            return callback(err);
+        }
+        db.collection('users', function (err, collection) {
+            if (err) {
+                db.close();
+                return callback(err);
+            }
+            collection.insert(users, {
+                safe: true
+            }, function (err, users) {
+                db.close();
+                if (err) {
+                    return callback(err);
+                }
+                callback(null, users[0]);
+            });
+        });
+    });
+};
+
+function query_user_data(username, password, done) {
+    mongodb.close();
+    mongodb.open(function (err, db) {
+        if (err) {
+            return done(err);
+        }
+        db.collection('users', function (err, collection) {
+            if (err) {
+                console.log('---------qwe--------');
+                db.close();
+                console.log('---------asd--------');
+                return done(err);
+            }
+            var query = {};
+            if (username) {
+                query.username = username,
+                    query.password = password
+            }
+            collection.find(query).sort({}).toArray(function (err, users) {
+                console.log('---------zxc--------');
+                db.close();
+                console.log('---------tyu--------');
+                if (err) {
+                    return done("false");
+                }
+                console.log(users[0])
+                console.log('---------hjk--------');
+                done(null, users[0]);
+            });
+        });
+    });
+};
+
+passport.use(new LocalStrategy(
+    function (username, password, done) {
+        console.log("开始查询mongodb--------------------------------")
+        mongodb.close();
+        mongodb.open(function (err, db) {
+            if (err)  return done(err);
+            db.collection('users', function (err, collection) {
+                if (err) {
+                    db.close();
+                    return done(err);
+                }
+                var query = {};
+                if (username) {
+                    query.username = username,
+                        query.password = password
+                }
+                collection.find(query).sort({}).toArray(function (err, users) {
+                    db.close();
+                    if (err) return done(null, "false");//失败！返回 err 信息
+                    console.log("查询mongodb中-------------------------------------")
+                    return done(null, users[0]);
+                });
+            });
+        });
     }
 ));
 
-passport.serializeUser(function (user, done) {//保存user对象
-
-    done(null, user);//可以通过数据库方式操作
+passport.serializeUser(function (user, done) {
+    console.log("查询完mongodb了--------------------------------------")
+    done(null, user);
 });
 
-passport.deserializeUser(function (user, done) {//删除user对象
-
-    done(null, user);//可以通过数据库方式操作
+passport.deserializeUser(function (user, done) {
+    var username = user.username
+    var password = user.username
+    query_user_data(username, password, done)
 });
-
 
 
 module.exports = passport
