@@ -1,4 +1,6 @@
 MetronicApp.controller('AppController', ['$scope', '$http', '$rootScope', '$cookieStore', function ($scope, $http, $rootScope, $cookieStore) {
+    var serveIp =  "http://192.168.1.30:3000";
+    
     $scope.$on('to-parent', function (event, data) {
         $scope.$broadcast('to-child', data);
     });
@@ -7,8 +9,9 @@ MetronicApp.controller('AppController', ['$scope', '$http', '$rootScope', '$cook
         
     });
 
-    $scope.loginGnss = function () {
-        $http.post("http://192.168.1.30:3000/login?username=" + $scope.userName + "&password=" + $scope.passWord, {}, {
+    $scope.loginGnss = function (serveIp) {
+        console.log(serveIp)
+        $http.post( "http://192.168.1.30:3000/login?username=" + $scope.userName + "&password=" + $scope.passWord, {}, {
             withCredentials: true,
         }).success(function (data) {
             if (data["connect.sid"]) {
@@ -34,7 +37,7 @@ MetronicApp.controller('AppController', ['$scope', '$http', '$rootScope', '$cook
         $scope.loginPage = login;
     }
 
-    function checkLogin() {
+    function checkLogin(serveIp) {
         $http.get("http://192.168.1.30:3000/users", {withCredentials: true}).success(function (req) {
 
             if (req == true) {

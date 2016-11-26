@@ -1,4 +1,5 @@
 MetronicApp.controller('HeaderController', ['$scope', '$http', function ($scope, $http) {
+    var serveIp =  'http://192.168.1.30:3000';
     $scope.$on('$includeContentLoaded', function () {
         Layout.initHeader();
     });
@@ -7,18 +8,18 @@ MetronicApp.controller('HeaderController', ['$scope', '$http', function ($scope,
     $scope.allSignalType = ['BDS','GPS','GLS'];
 
 
-    if (localStorage.getItem('base_station') && localStorage.getItem('signal_type')) {
-        $scope.base_station = localStorage.getItem('base_station');
-        $scope.signal_type = localStorage.getItem('signal_type');
+    if (localStorage.getItem('baseStation') && localStorage.getItem('signalType')) {
+        $scope.base_station = localStorage.getItem('baseStation');
+        $scope.signal_type = localStorage.getItem('signalType');
     }
     $scope.changeBaseStation = function (name) {
-        localStorage.setItem('base_station', name)
+        localStorage.setItem('baseStation', name)
         $scope.base_station = name;
         $scope.$emit('to-parent', name);
     }
 
     $scope.changeSignalType = function (name) {
-        localStorage.setItem('signal_type', name)
+        localStorage.setItem('signalType', name)
         $scope.signal_type = name;
         $scope.$emit('to-parent', name);
     }

@@ -22,10 +22,8 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
         "udre": [],
         "utc": [],
     }
-
-   
-
-
+    // var serveIp =  'http://192.168.1.30:3000';
+    
     $scope.$on('to-child', function (event, type) {
 
     });
@@ -43,8 +41,11 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
         var now = "";
         if (date.getHours() < 10) now = "0"
         now = now + date.getHours() + ":";
-        if (date.getMinutes() < 10) now = now + "0"
-        return now + date.getMinutes();
+        if (date.getMinutes() < 10) now = now + "0";
+        now = now + date.getMinutes() + ":";
+        if(date.getSeconds() < 10) now = now + "0";
+        $scope.nowTime = now + date.getSeconds()
+        return now + date.getSeconds();
     }
 
     function showSatelliteNum(data) {
@@ -191,9 +192,12 @@ angular.module('MetronicApp').controller('dashboardController', function ($inter
     }
 
     function init() {
-        $scope.nowTime = showTime()
+        showTime()
         $interval(showTime, 1000)
+
+
     }
+
     init()
 
     function lineChart(chartData, chartId, yName) {

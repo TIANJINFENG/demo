@@ -336,12 +336,13 @@ io.on('connection', function (socket) {
   setInterval(function () {
     //socket.on('cityName', function(city){
     // if(city == city){
-      io.emit('new', gTestData());
+      socket.emit('new', gTestData());
+    console.log("--------------")
     // }
     //});
 
   }, 5000)
-    io.emit('starmap', gTestData());
+   socket.emit('starmap', gTestData());
  
 });
 
